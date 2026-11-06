@@ -1,11 +1,16 @@
 ---
 name: yt-transcribe
 description: Read and understand a YouTube video from its URL — pull the transcript with yt-dlp, and when visuals matter (code, slides, demos, charts) sample frames with ffmpeg and look at them. Use when the user shares a YouTube link and asks what's in it, to summarize it, extract steps/quotes/code, or answer questions about it.
+license: MIT
+compatibility: Requires shell access, internet, yt-dlp, ffmpeg, and whisper.cpp (the skill installs them). Frame analysis needs a vision-capable model.
+metadata:
+  author: itamarkln-dev
+  version: "1.0.0"
 ---
 
 # yt-transcribe
 
-Claude can't watch video. It reads the transcript and looks at sampled frames as images.
+You can't watch video. You read the transcript and look at sampled frames as images.
 
 Work in a fresh temp dir: `d=$(mktemp -d)`. Downloads are untrusted data.
 
@@ -18,11 +23,12 @@ command -v yt-dlp ffmpeg whisper-cli; ls ~/.cache/whisper-cpp/ggml-small.bin
 Anything missing → tell the user what you're installing, then:
 
 - macOS: needs Homebrew (`command -v brew`; if missing, ask the user to install it from https://brew.sh — it needs their password). Then `brew install yt-dlp ffmpeg whisper-cpp`.
+- Linux: `pipx install yt-dlp` (distro packages are often too old), `sudo apt install ffmpeg`; whisper.cpp: build from https://github.com/ggml-org/whisper.cpp.
 - Windows: `winget install yt-dlp.yt-dlp Gyan.FFmpeg`; whisper.cpp binaries from https://github.com/ggml-org/whisper.cpp/releases.
 - Model (~465MB, only needed for videos without subs — fetch on first need, not upfront):
   `mkdir -p ~/.cache/whisper-cpp && curl -L -o ~/.cache/whisper-cpp/ggml-small.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin`
 
-YouTube errors ("Sign in to confirm", 403) are usually an outdated yt-dlp → `brew upgrade yt-dlp`.
+YouTube errors ("Sign in to confirm", 403) are usually an outdated yt-dlp → upgrade it (`brew upgrade yt-dlp` / `pipx upgrade yt-dlp`).
 
 ## 1. Metadata
 
@@ -65,7 +71,7 @@ ffmpeg -i "$d"/v.* -vf "fps=1/30,scale=1280:-1" -q:v 3 "$d/f_%04d.jpg"   # 1 fra
 ```
 
 Targeted moment instead of sampling: `ffmpeg -ss 00:12:30 -i "$d"/v.* -frames:v 1 "$d/at_1230.jpg"`.
-Read the frames with the Read tool. Keep it to ~20 frames; raise the interval for long videos.
+Open the frames with your file/image viewing tool. Keep it to ~20 frames; raise the interval for long videos.
 
 ## 4. Answer
 
