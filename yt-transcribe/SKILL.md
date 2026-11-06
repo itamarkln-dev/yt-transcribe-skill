@@ -1,9 +1,9 @@
 ---
-name: youtube-read
+name: yt-transcribe
 description: Read and understand a YouTube video from its URL — pull the transcript with yt-dlp, and when visuals matter (code, slides, demos, charts) sample frames with ffmpeg and look at them. Use when the user shares a YouTube link and asks what's in it, to summarize it, extract steps/quotes/code, or answer questions about it.
 ---
 
-# youtube-read
+# yt-transcribe
 
 Claude can't watch video. It reads the transcript and looks at sampled frames as images.
 
